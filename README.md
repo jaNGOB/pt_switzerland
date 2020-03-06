@@ -1,1 +1,1 @@
-# pt_switzerland
+# Pairs-Trading with Swiss Stocks
