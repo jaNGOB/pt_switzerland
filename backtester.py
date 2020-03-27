@@ -159,6 +159,126 @@ def backtest(temp, asset1, asset2):
     return temp
 
 
+def backtest_with_cost(temp, asset1, asset2):
+    
+    long = False
+    short = False
+    
+    trades = 0
+    
+    long_price = None
+    short_price = None
+    
+    last_price1 = None
+    last_price2 = None
+
+    ret = []
+    
+    for index, row in temp.iterrows():
+        
+        if row['longsignal'] and not long:
+            
+            #print('going long: X {} Y {}'.format(row[asset1], row[asset2]))
+            
+            trades += 1
+            short = False
+            long = True
+            
+            long_price = row[asset1]
+            short_price = row[asset2]
+            
+            last_price1 = row[asset1]
+            last_price2 = row[asset2]
+            
+            ret.append(-0.0084)
+            
+        elif row['shortsignal'] and not short :
+                        
+            #print('going short: X {} Y {}'.format(row[asset1], row[asset2]))
+            
+            trades += 1
+            long = False
+            short = True
+            
+            long_price = row[asset2]
+            short_price = row[asset1]
+            
+            last_price1 = row[asset1]
+            last_price2 = row[asset2]
+            
+            ret.append(-0.0084)
+            
+            
+        elif long and row['closelong']:
+            
+            #print('closing long: X {} Y {}'.format(row[asset1], row[asset2]))
+            
+            short = False
+            long = False
+            
+            long_ret = (row[asset1] / last_price1) - 1
+            short_ret = (row[asset2] / -last_price2) + 1
+            
+            last_price1 = row[asset1]
+            last_price2 = row[asset2]
+        
+            ret.append(long_ret+short_ret-0.0084)            
+            
+            
+        elif short and row['closeshort']:
+            
+            #print('closing short: X {} Y {}'.format(row[asset1], row[asset2]))
+            
+            short = False
+            long = False
+            
+            long_ret = (row[asset2] / last_price2) - 1
+            short_ret = (row[asset1] / -last_price1) + 1
+            
+            last_price1 = row[asset1]
+            last_price2 = row[asset2]
+        
+            ret.append(long_ret+short_ret-0.0084)            
+            
+            
+        elif long:
+            
+            long_ret = (row[asset1] / last_price1) - 1
+            short_ret = (row[asset2] / -last_price2) + 1
+            
+            long_price = row[asset1]
+            short_price = row[asset2]
+            
+            last_price1 = row[asset1]
+            last_price2 = row[asset2]            
+            
+            ret.append(long_ret+short_ret)
+            
+        elif short:
+            
+            long_ret = (row[asset2] / last_price2) - 1
+            short_ret = (row[asset1] / -last_price1) + 1
+            
+            long_price = row[asset2]
+            short_price = row[asset1]
+           
+            last_price1 = row[asset1]
+            last_price2 = row[asset2]
+        
+            ret.append(long_ret+short_ret)
+            
+        else:
+            last_price1 = row[asset1]
+            last_price2 = row[asset2]
+            ret.append(0)
+
+    temp['returns'] = ret
+    temp['cum_returns'] = temp.returns.cumsum() + 1
+    
+    print(asset1, asset2, ': ', trades, 'trades were made')
+    return temp
+
+
 def pt_signal(df, stock1, stock2, entry, exit, p_mavg, p_stdev, p_rsi, rsi_thres):
     temp = df.copy()
     
