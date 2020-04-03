@@ -190,7 +190,7 @@ def backtest_with_cost(temp, asset1, asset2):
             last_price1 = row[asset1]
             last_price2 = row[asset2]
             
-            ret.append(-0.0084)
+            ret.append(-0.0027)
             
         elif row['shortsignal'] and not short :
                         
@@ -206,7 +206,7 @@ def backtest_with_cost(temp, asset1, asset2):
             last_price1 = row[asset1]
             last_price2 = row[asset2]
             
-            ret.append(-0.0084)
+            ret.append(-0.0027)
             
             
         elif long and row['closelong']:
@@ -222,7 +222,7 @@ def backtest_with_cost(temp, asset1, asset2):
             last_price1 = row[asset1]
             last_price2 = row[asset2]
         
-            ret.append(long_ret+short_ret-0.0084)            
+            ret.append(long_ret+short_ret-0.0027)            
             
             
         elif short and row['closeshort']:
@@ -238,7 +238,7 @@ def backtest_with_cost(temp, asset1, asset2):
             last_price1 = row[asset1]
             last_price2 = row[asset2]
         
-            ret.append(long_ret+short_ret-0.0084)            
+            ret.append(long_ret+short_ret-0.0027)            
             
             
         elif long:
@@ -271,7 +271,10 @@ def backtest_with_cost(temp, asset1, asset2):
             last_price1 = row[asset1]
             last_price2 = row[asset2]
             ret.append(0)
-
+            
+    if trades >= 1:
+        ret[-1] += -0.006
+        
     temp['returns'] = ret
     temp['cum_returns'] = temp.returns.cumsum() + 1
     
