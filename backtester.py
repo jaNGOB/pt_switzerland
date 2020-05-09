@@ -46,9 +46,6 @@ def backtest(temp, asset1, asset2):
     
     trades = 0
     
-    long_price = None
-    short_price = None
-    
     last_price1 = None
     last_price2 = None
 
@@ -64,9 +61,6 @@ def backtest(temp, asset1, asset2):
             short = False
             long = True
             
-            long_price = row[asset1]
-            short_price = row[asset2]
-            
             last_price1 = row[asset1]
             last_price2 = row[asset2]
             
@@ -79,9 +73,6 @@ def backtest(temp, asset1, asset2):
             trades += 1
             long = False
             short = True
-            
-            long_price = row[asset2]
-            short_price = row[asset1]
             
             last_price1 = row[asset1]
             last_price2 = row[asset2]
@@ -126,9 +117,6 @@ def backtest(temp, asset1, asset2):
             long_ret = (row[asset1] / last_price1) - 1
             short_ret = (row[asset2] / -last_price2) + 1
             
-            long_price = row[asset1]
-            short_price = row[asset2]
-            
             last_price1 = row[asset1]
             last_price2 = row[asset2]            
             
@@ -138,9 +126,6 @@ def backtest(temp, asset1, asset2):
             
             long_ret = (row[asset2] / last_price2) - 1
             short_ret = (row[asset1] / -last_price1) + 1
-            
-            long_price = row[asset2]
-            short_price = row[asset1]
            
             last_price1 = row[asset1]
             last_price2 = row[asset2]
@@ -155,7 +140,7 @@ def backtest(temp, asset1, asset2):
     temp['returns'] = ret
     temp['cum_returns'] = temp.returns.cumsum() + 1
     
-    print(asset1, asset2, ': ', trades, 'trades were made')
+    #print(asset1, asset2, ': ', trades, 'trades were made')
     return temp
 
 
@@ -278,7 +263,7 @@ def backtest_with_cost(temp, asset1, asset2):
     temp['returns'] = ret
     temp['cum_returns'] = temp.returns.cumsum() + 1
     
-    print(asset1, asset2, ': ', trades, 'trades were made')
+#    print(asset1, asset2, ': ', trades, 'trades were made')
     return temp
 
 
